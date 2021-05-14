@@ -1,0 +1,16 @@
+{
+  "name": "text-only-jam-2021-8bits-to-infinity-start-small",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc",
+    "tscv": "tsc --version",
+    "tsc:watch": "tsc --watch",
+    "start": "parcel ./src/index.html"
+  },
+  "dependencies": {
+    "@game.object/ts-game-toolbox": "^4.0.11",
+    "parcel": "^2.0.0-beta.2"
+  }
+}
