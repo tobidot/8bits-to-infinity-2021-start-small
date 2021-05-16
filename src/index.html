@@ -31,26 +31,32 @@
                             Music-Volume:<input id="music-volume" type="range" min="0" max="100">
                         </label>
                         <button class="sound-toggle" id="sound-toggle">
-                            Sound <span class="state">Off</span>
+                            Sound <span class="state">On</span>
                         </button>
                         <label class="sound-volume">
                             Sound-Volume:<input id="sound-volume" type="range" min="0" max="100">
                         </label>
                         <button class="new-random-level" id="new-random-level">New Random Level</button>
+                        <button class="restart-level" id="new-random-level">Restart Level(ESC)</button>
+                        <button class="select-level" id="select-level">Select Level</button>
                     </div>
                 </div>
             </div>
         </header>
         <canvas id="app" width="800" height="600"></canvas>
         <footer>
-            <div>
-                <strong>Score:</strong>
-                <span id="score">0</span>
-            </div>
+            <div id="set" class="set"></div>
+            <div class="state">
 
-            <div>
-                <strong>Moves:</strong>
-                <span id="moves">0</span>
+                <div>
+                    <strong>Score:</strong>
+                    <span id="score">0</span>
+                </div>
+
+                <div>
+                    <strong>Moves:</strong>
+                    <span id="moves">0</span>
+                </div>
             </div>
         </footer>
     </div>
@@ -62,6 +68,218 @@
     </audio>
     <audio id='sound-select' src="./assets/sounds/vgmenuselect.wav" type="audio/wav" preload="auto" autobuffer></audio>
     <audio id='sound-win' src="./assets/sounds/win-sound.wav" type="audio/wav" preload="auto" autobuffer></audio>
+    <audio id='sound-over' src="./assets/sounds/accident.wav" type="audio/wav" preload="auto" autobuffer></audio>
+    <div id="level-select-popup" class="js-hidden">
+        <button class="close-button">X</button>
+        <div data-level="1" data-width="3" data-height="3">
+            <h3>The Beginning</h3>
+            <p>
+                The smallest possible level to understand the rules.
+            </p>
+            <div class="set">
+                1234
+            </div>
+            <div class="map">
+                123
+                412
+                341
+            </div>
+        </div>
+        <div data-level="2" data-width="4" data-height="3">
+            <h3>Novice</h3>
+            <p>
+                Can you get them all?
+            </p>
+            <div class="set">
+                123
+            </div>
+            <div class="map">
+                1213
+                1213
+                1213
+            </div>
+        </div>
+        <div data-level="3" data-width="8" data-height="8">
+            <h3>Check</h3>
+            <p>
+                It's a little chessboard .
+            </p>
+            <div class="set">
+                .#PNBRQK
+            </div>
+            <div class="map">
+                RNBKQBNK
+                PPPPPPPP
+                .#.#.#.#
+                #.#.#.#.
+                .#.#.#.#
+                #.#.#.#.
+                PPPPPPPP
+                RNBKQBNK
+            </div>
+        </div>
+        <div data-level="4" data-width="9" data-height="9">
+            <h3>Waves</h3>
+            <p>
+                It's all so wavy.
+            </p>
+            <div class="set">
+                12345
+            </div>
+            <div class="map">
+                111111111
+                122222221
+                123333321
+                123444321
+                123454321
+                123444321
+                123333321
+                122222221
+                111111111
+            </div>
+        </div>
+
+        <div data-level="5" data-width="16" data-height="16">
+            <h3>Checkmate</h3>
+            <p>
+                It's a 4 player chessboard.
+            </p>
+            <div class="set">
+                1234
+            </div>
+            <div class="map">
+                1122334411223344
+                1122334411223344
+                2233441122334411
+                2233441122334411
+                3344112233441122
+                3344112233441122
+                4411223344112233
+                4411223344112233
+                1122334411223344
+                1122334411223344
+                2233441122334411
+                2233441122334411
+                3344112233441122
+                3344112233441122
+                4411223344112233
+                4411223344112233
+            </div>
+        </div>
+        <div data-level="6" data-width="10" data-height="8">
+            <h3>Sign</h3>
+            <p>
+                Its a sine.
+            </p>
+            <div class="set">
+                0123456789
+            </div>
+            <div class="map">
+                0123456789
+                1234567890
+                3456789012
+                3456789012
+                1234567890
+                9012345678
+                7890123456
+                7890123456
+            </div>
+        </div>
+        <div data-level="10" data-width="12" data-height="8">
+            <h3>Math</h3>
+            <p>
+                Are you afraid of math?
+            </p>
+            <div class="set">
+                .+-*/=0123456789
+            </div>
+            <div class="map">
+                1+1=2..2+2=4
+                4*4=16.8/2=4
+                1-3=-2.5-3=2
+                .16*7=112...
+                .20*20=400..
+                .8888/11=808
+                .99*9+9=900.
+                .77-44-11=22
+            </div>
+        </div>
+        <div data-level="11" data-width="12" data-height="6">
+            <h3>Smile</h3>
+            <p>
+                You are not laughing!
+            </p>
+            <div class="set">
+                #.=O()
+            </div>
+            <div class="map">
+                ..########..
+                .#........#.
+                #..()..()..#
+                #..........#
+                .#..====..#.
+                ..########..
+            </div>
+        </div>
+        <div data-level="12" data-width="40" data-height="30">
+            <h3>Credits Assets</h3>
+            <p>
+                A Thank you, to people and websites that provided assets for this game.
+            </p>
+            <div class="set">
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._"
+            </div>
+            <div class="map">
+                ........................................
+                I_used_some_soundeffects_from...........
+                .........opengameart.org................
+                ........................................
+                ........................................
+                Thanks_to__listener__for_the_"Win_Sound"
+                ........................................
+                ........................................
+                Thanks_to__Fupi__for_the_"vgmenuselect".
+                ........................................
+                ........................................
+                Thanks_to__Modanung__for_the_"accident".
+                ........................................
+                ........................................
+                Also_thanks_to_the_host_of_this_jam_for_
+                providing_the_opportunity_to_build_this.
+                ........................................
+                ........................................
+                ........................................
+            </div>
+        </div>
+        <div data-level="13" data-width="50" data-height="30">
+            <h3>Credits Tools</h3>
+            <p>
+                More Credits, for the tools and programming references i used.
+            </p>
+            <div class="set">
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890._-"
+            </div>
+            <div class="map">
+                ..................................................
+                This_project_is_written_in_typescript.............
+                ..................................................
+                ..................................................
+                For_the_background_music_I_used_Bosca_Ceoil.......
+                ..................................................
+                ..................................................
+                A_little_thanks_to__css-tricks.com__where_i_copied
+                how_to_style_the_html_sliders.....................
+                ..................................................
+                ..................................................
+                ..................................................
+                ..................................................
+                ................Thanks_for_playing................
+                ..................................................
+                .....................tobidot......................
+                ..................................................
+            </div>
+        </div>
+    </div>
     <script src="index.ts"></script>
 </body>
 

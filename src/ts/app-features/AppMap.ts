@@ -6,7 +6,6 @@ export class AppMap {
     public props: AppMapProperties;
     public logic: AppMapLogic;
 
-
     public constructor(
         public app: App,
     ) {
@@ -48,7 +47,11 @@ export class AppMap {
         unit.x = target.x;
         unit.y = target.y;
         this.logic.set(target, unit);
-        this.app.properties.units.push(unit);
+        this.app.props.units.push(unit);
+    }
+
+    public clear() {
+        this.props.map.clear();
     }
 
     public for_each(callback: (unit: Unit | PointInterface) => Unit | null): void {

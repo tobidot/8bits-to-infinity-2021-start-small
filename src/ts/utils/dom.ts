@@ -13,7 +13,7 @@ export function get_element_by_query_selector<T extends HTMLElement>(
 ): T {
     const element = root.querySelector(selector);
     if (!element) throw new Error("Element not found" + selector);
-    if (!class_type) {
+    if (class_type) {
         if (!(element instanceof class_type)) throw new Error("Element not of required type " + selector);
         return element;
     } else {

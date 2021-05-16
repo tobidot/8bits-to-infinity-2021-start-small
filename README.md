@@ -17,5 +17,10 @@ When reaching Z the letter will then again move to A.
 I used [typescript](https://www.typescriptlang.org/) to write this game and [parcel](https://parceljs.org/) to bundle the project into an html project.
 For the music I used [Bosca Ceoil](https://boscaceoil.net/).
 
+### I used the following sounds from other authors.
 The "Win Sound" is from @listener https://opengameart.org/content/win-sound-effect 
 The "vgmenuselect" is from Fupi https://opengameart.org/content/8bit-menu-select
+The "accident" is from Fupi https://opengameart.org/content/8bit-menu-select
+
+### Some code was copied directly from the following tutorials.
+Styling sliders in CSS : https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/

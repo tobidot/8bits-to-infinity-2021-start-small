@@ -4,23 +4,34 @@ import { get_element_by_query_selector } from "../utils/dom";
 import { PointInterface } from "../utils/shapes";
 
 export class GamePlay {
-    public static CONSTS = {
-        TYPE_SET: ["A", "B", "C", "D"],
-    };
-    public listeners: GamePlayListeners;
+    public elements: GamePlayElements;
+    public props: GamePlayProperties;
     public logic: GamePlayLogic;
+    public listeners: GamePlayListeners;
 
     public constructor(
         public app: App
     ) {
-        this.listeners = new GamePlayListeners(this);
+        this.elements = new GamePlayElements(this);
+        this.props = new GamePlayProperties(this);
         this.logic = new GamePlayLogic(this);
+        this.listeners = new GamePlayListeners(this);
     }
 
     public grow(type: number) {
+        if (this.props.game_over) return;
+        this.props.moves++;
         this.logic.grow(type);
+        this.check_and_strike();
+    }
+
+    public check_and_strike() {
         this.logic.update_matching_count();
         this.logic.strike();
+        if (this.logic.is_game_over()) {
+            this.props.game_over = true;
+            this.app.features.sound.play('over');
+        }
     }
 }
 
@@ -29,28 +40,21 @@ class GamePlayListeners {
         public feature: GamePlay
     ) {
         window.addEventListener('keydown', this.on_key_down);
-        get_element_by_query_selector(document, '#new-random-level', HTMLButtonElement).addEventListener(
-            'click', this.on_new_random_level
-        );
         requestAnimationFrame(this.update);
-    }
-
-    protected on_new_random_level = () => {
-        this.feature.logic.restart();
     }
 
     protected on_key_down = (event: KeyboardEvent) => {
         const letter = event.key.toUpperCase();
-        if (!GamePlay.CONSTS.TYPE_SET.includes(letter)) return;
-        this.feature.grow(GamePlay.CONSTS.TYPE_SET.indexOf(letter));
+        if (!this.feature.props.current_set.includes(letter)) return;
+        this.feature.grow(this.feature.props.current_set.indexOf(letter));
     }
 
     protected update = () => {
         // let noise_factor = 0;
-        this.feature.app.properties.units.forEach((unit) => {
+        this.feature.app.props.units.forEach((unit) => {
             if (unit.dead && unit.animation === "none") {
-                const index = this.feature.app.properties.units.indexOf(unit);
-                this.feature.app.properties.units.splice(index, 1);
+                const index = this.feature.app.props.units.indexOf(unit);
+                this.feature.app.props.units.splice(index, 1);
             }
             if (unit.dead) return;
             // maybe trigger idle animation
@@ -59,6 +63,26 @@ class GamePlayListeners {
             }
         });
         requestAnimationFrame(this.update);
+    }
+}
+
+class GamePlayElements {
+    public constructor(
+        public feature: GamePlay
+    ) {
+
+    }
+}
+class GamePlayProperties {
+    public current_set: Array<string> = ['.'];
+    public game_over: boolean = false;
+    public score: number = 0;
+    public moves: number = 0;
+
+    public constructor(
+        public feature: GamePlay
+    ) {
+
     }
 }
 
@@ -72,10 +96,10 @@ class GamePlayLogic {
     }
 
     public restart() {
-        this.feature.app.properties.units = [];
+        this.feature.app.props.units = [];
         for (let x = 0; x < 40; ++x) {
             for (let y = 0; y < 30; ++y) {
-                this.feature.app.features.map.create_unit_at(Math.floor(Math.random() * GamePlay.CONSTS.TYPE_SET.length), { x, y });
+                this.feature.app.features.map.create_unit_at(Math.floor(Math.random() * this.feature.props.current_set.length), { x, y });
             }
         }
         this.feature.app.features.gameplay.logic.update_matching_count();
@@ -85,7 +109,7 @@ class GamePlayLogic {
         this.feature.app.features.map.for_each((unit: Unit | PointInterface): Unit | null => {
             if (!(unit instanceof Unit)) return null;
             if (type === unit.type) {
-                unit.type = (type + 1) % GamePlay.CONSTS.TYPE_SET.length;
+                unit.type = (type + 1) % this.feature.props.current_set.length;
             }
             return unit;
         });
@@ -122,6 +146,9 @@ class GamePlayLogic {
                 if (stencil) {
                     hits++;
                     stencil.forEach((field) => {
+                        if (field instanceof Unit) {
+                            this.feature.props.score++;
+                        }
                         this.feature.app.features.map.kill(field);
                     });
                 }
@@ -132,5 +159,20 @@ class GamePlayLogic {
         } else {
             this.feature.app.features.sound.play("select")
         }
+    }
+
+    public is_game_over(): boolean {
+        const sum_stencil = (sum: number, next: PointInterface | Unit): number => {
+            return sum + (next instanceof Unit ? 1 : 0);
+        };
+        for (let y = 0; y < this.feature.app.features.map.props.height; ++y) {
+            for (let x = 0; x < this.feature.app.features.map.props.width; ++x) {
+                let units: number = this.feature.app.features.map.get_stencil({ left: x - 1, top: y - 1 }, 3, 3).reduce(sum_stencil, 0);
+                if (units === 9) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

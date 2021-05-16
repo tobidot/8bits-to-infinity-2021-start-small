@@ -15,7 +15,12 @@ export class Sound {
     }
 
     public play(sound_name: string) {
+        if (!this.props.sound_on) return;
         switch (sound_name) {
+            case "over":
+                this.elements.sound_over.currentTime = 0;
+                this.elements.sound_over.play();
+                break;
             case "win":
                 this.elements.sound_win.currentTime = 0;
                 this.elements.sound_win.play();
@@ -31,7 +36,8 @@ export class Sound {
 }
 
 class SoundProperties {
-    public on: boolean = false;
+    public music_on: boolean = false;
+    public sound_on: boolean = true;
     public volume: number = 70;
 
     public constructor(
@@ -48,6 +54,7 @@ class SoundElements {
 
     public sound_win: HTMLAudioElement;
     public sound_select: HTMLAudioElement;
+    public sound_over: HTMLAudioElement;
 
     public constructor(
         public feature: Sound
@@ -57,6 +64,7 @@ class SoundElements {
         this.sound_volume = get_element_by_query_selector(document, '#sound-volume', HTMLInputElement);
         this.sound_win = get_element_by_query_selector(document, '#sound-win', HTMLAudioElement);
         this.sound_select = get_element_by_query_selector(document, '#sound-select', HTMLAudioElement);
+        this.sound_over = get_element_by_query_selector(document, '#sound-over', HTMLAudioElement);
     }
 }
 
@@ -72,13 +80,14 @@ class SoundListeners {
         this.feature.props.volume = Number.parseInt(this.feature.elements.sound_volume.value);
         const volume = this.feature.props.volume / 100;
         this.feature.elements.sound_win.volume = volume;
-        this.feature.elements.sound_select.volume = volume
+        this.feature.elements.sound_select.volume = volume;
+        this.feature.elements.sound_over.volume = volume;
         // this.feature.elements.sound_win.volume = this.feature.props.volume / 100;
     }
 
     protected on_sound_toggle = () => {
-        this.feature.props.on = !this.feature.props.on;
-        if (this.feature.props.on) {
+        this.feature.props.sound_on = !this.feature.props.sound_on;
+        if (this.feature.props.sound_on) {
             this.feature.elements.sound_toggle_state.innerText = "On";
         } else {
             this.feature.elements.sound_toggle_state.innerText = "Off";
