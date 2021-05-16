@@ -1,4 +1,8 @@
+import { AppMap } from "../app-features/AppMap";
 import { AppView } from "../app-features/AppView";
+import { GamePlay } from "../app-features/GamePlay";
+import { Music } from "../app-features/Music";
+import { Sound } from "../app-features/Sound";
 import { Unit } from "../app-models/Unit";
 import { AppElements } from "./AppElements";
 import { AppFeatureCollection } from "./AppFeatureCollection";
@@ -14,14 +18,13 @@ export class App {
         this.properties = default_properties(this.elements);
         this.features = {
             view: new AppView(this),
+            map: new AppMap(this),
+            gameplay: new GamePlay(this),
+            music: new Music(this),
+            sound: new Sound(this),
         };
+        this.features.gameplay.logic.restart();
 
-        let x: Unit;
-        this.properties.units.push(x = new Unit());
-        this.properties.units.push(x = new Unit());
-        x.x = 1;
-        this.properties.units.push(x = new Unit());
-        x.y = 1;
     }
 }
 

@@ -7,10 +7,14 @@
     "tsc": "tsc",
     "tscv": "tsc --version",
     "tsc:watch": "tsc --watch",
-    "start": "parcel ./src/index.html"
+    "start": "parcel ./src/index.html",
+    "watch": "parcel ./src/index.html"
   },
   "dependencies": {
     "@game.object/ts-game-toolbox": "^4.0.11",
     "parcel": "^2.0.0-beta.2"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "2.0.0-beta.2"
   }
 }
