@@ -2,5 +2,9 @@
 node_modules
 # parcel
 .parcel-cache
+# photo-line
+*.pld
+*.plb
 # dist
 dist
+release
